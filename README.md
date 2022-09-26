@@ -221,3 +221,4 @@ scrape_configs:
 [Link](https://github.com/SiM22/pihole-exporter-helm-chart)
 
 This is a simple Helm Chart to deploy the exporter in a kubernetes cluster.
+
