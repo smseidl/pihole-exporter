@@ -8,7 +8,10 @@ This is a Prometheus exporter for [PI-Hole](https://pi-hole.net/)'s Raspberry PI
 
 ![Grafana dashboard](https://raw.githubusercontent.com/eko/pihole-exporter/master/dashboard.jpg)
 
-Grafana dashboard is [available here](https://grafana.com/dashboards/10176) on the Grafana dashboard website and also [here](https://raw.githubusercontent.com/eko/pihole-exporter/master/grafana/dashboard.json) on the GitHub repository.
+Available Grafana Dasboards:
+
+* Prometheus: [Grafana Labs](https://grafana.com/grafana/dashboards/10176-pi-hole-exporter/) / [JSON/Github](https://raw.githubusercontent.com/eko/pihole-exporter/master/grafana/dashboard.json) --> [Preview](https://raw.githubusercontent.com/eko/pihole-exporter/master/dashboard.jpg)
+* InfluxDB 2 (Flux): [Grafana Labs](https://grafana.com/grafana/dashboards/17094-pi-hole-exporter-influxdb-2/) / [JSON/Github](https://raw.githubusercontent.com/eko/pihole-exporter/master/grafana/dashboard-influxdb2.json) --> [Preview](https://raw.githubusercontent.com/eko/pihole-exporter/master/dashboard-influxdb2.png)
 
 ## Prerequisites
 
@@ -56,6 +59,7 @@ $ docker run \
   -e 'PIHOLE_HOSTNAME=192.168.1.2' \
   -e "PIHOLE_API_TOKEN=$API_TOKEN" \
   -e 'PORT=9617' \
+  -p 9617:9617 \
   ekofr/pihole-exporter:latest
 ```
 
@@ -78,11 +82,12 @@ To do so, you can specify a list of hostnames, protocols, passwords/API tokens a
 
 ```
 $ docker run \
-  -e 'PIHOLE_PROTOCOL="http,http,http" \
-  -e 'PIHOLE_HOSTNAME="192.168.1.2,192.168.1.3,192.168.1.4"' \
-  -e "PIHOLE_API_TOKEN="$API_TOKEN1,$API_TOKEN2,$API_TOKEN3" \
-  -e "PIHOLE_PORT="8080,8081,8080" \
+  -e 'PIHOLE_PROTOCOL=http,http,http" \
+  -e 'PIHOLE_HOSTNAME=192.168.1.2,192.168.1.3,192.168.1.4"' \
+  -e "PIHOLE_API_TOKEN=$API_TOKEN1,$API_TOKEN2,$API_TOKEN3" \
+  -e "PIHOLE_PORT=8080,8081,8080" \
   -e 'PORT=9617' \
+  -p 9617:9617 \
   ekofr/pihole-exporter:latest
 ```
 
@@ -90,11 +95,12 @@ If port, protocol and API token/password is the same for all instances, you can 
 
 ```
 $ docker run \
-  -e 'PIHOLE_PROTOCOL=",http" \
-  -e 'PIHOLE_HOSTNAME="192.168.1.2,192.168.1.3,192.168.1.4"' \
-  -e "PIHOLE_API_TOKEN="$API_TOKEN" \
-  -e "PIHOLE_PORT="8080" \
+  -e 'PIHOLE_PROTOCOL=,http" \
+  -e 'PIHOLE_HOSTNAME=192.168.1.2,192.168.1.3,192.168.1.4"' \
+  -e "PIHOLE_API_TOKEN=$API_TOKEN" \
+  -e "PIHOLE_PORT=8080" \
   -e 'PORT=9617' \
+  -p 9617:9617 \
   ekofr/pihole-exporter:latest
 ```
 
@@ -102,7 +108,7 @@ $ docker run \
 
 Optionally, you can download and build it from the sources. You have to retrieve the project sources by using one of the following way:
 ```bash
-$ go get -u github.com/eko/pihole-exporter
+$ go install github.com/eko/pihole-exporter@latest
 # or
 $ git clone https://github.com/eko/pihole-exporter.git
 ```
@@ -188,6 +194,9 @@ scrape_configs:
 
 # WEBPASSWORD / api token defined on the PI-Hole interface at `/etc/pihole/setupVars.conf`
   -pihole_api_token string (optional)
+
+# Address to be used for the exporter
+  -bind_addr string (optional) (default "0.0.0.0")
 
 # Port to be used for the exporter
   -port string (optional) (default "9617")
